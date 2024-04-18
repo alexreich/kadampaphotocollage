@@ -9,7 +9,7 @@ internal sealed class OrderedFileSystemPhotoRepository : FileSystemPhotoReposito
     {
     }
 
-    public override string GetNextPhotoFilePath()
+    public override string GetNextPhotoFilePath(bool silenceEnabled)
     {
         if (!this.PhotoFilePaths.TryDequeue(out var path))
         {

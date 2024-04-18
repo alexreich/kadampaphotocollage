@@ -87,7 +87,7 @@ public sealed class CollagePresenter
     {
         try
         {
-            var path = this.photoRepository.GetNextPhotoFilePath();
+            var path = this.photoRepository.GetNextPhotoFilePath(this.Configuration.SilenceEnabled);
             var view = this.GetNextDisplayView();
             var control = new CollageImage(path, this);
             view.ImageCanvas.Children.Add(control);

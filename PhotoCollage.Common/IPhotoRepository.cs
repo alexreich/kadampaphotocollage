@@ -6,5 +6,5 @@ public interface IPhotoRepository
     {
         get;
     }
-    string GetNextPhotoFilePath();
+    string GetNextPhotoFilePath(bool silenceEnabled);
 }

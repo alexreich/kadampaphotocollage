@@ -39,7 +39,7 @@ namespace PhotoCollageWeb.Server.Workers
                         this.logger.LogInformation("Collage worker ran at {time}", DateTimeOffset.Now);
                     }
 
-                    var path = this.photoRepository.GetNextPhotoFilePath();
+                    var path = this.photoRepository.GetNextPhotoFilePath(this.settings.SilenceEnabled);
                     var extension = Path.GetExtension(path);
                     var bytes = File.ReadAllBytes(path);
                     var photo = new PhotoData()

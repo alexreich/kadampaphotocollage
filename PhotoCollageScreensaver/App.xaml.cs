@@ -20,8 +20,11 @@ public partial class App : Application
             case "/p": // preview
                 this.Shutdown();
                 break;
+            case "/v": // screensaver
+                this.controller.StartScreensaver(true);
+                break;
             case "/s": // screensaver
-                this.controller.StartScreensaver();
+                this.controller.StartScreensaver(false);
                 break;
             default: // no argument or /c both show config
                 this.controller.StartSetup();

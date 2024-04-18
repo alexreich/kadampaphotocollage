@@ -14,7 +14,7 @@ internal sealed class RandomFileSystemPhotoRepository : FileSystemPhotoRepositor
         this.displayedPhotos = new List<string>();
     }
 
-    public override string GetNextPhotoFilePath()
+    public override string GetNextPhotoFilePath(bool silenceEnabled)
     {
         if (!this.PhotoFilePaths.TryDequeue(out var path))
         {
@@ -25,10 +25,19 @@ internal sealed class RandomFileSystemPhotoRepository : FileSystemPhotoRepositor
         lock (this.threadLock)
         {
             this.displayedPhotos.Add(path);
+            this.pleaseSilence = !this.pleaseSilence;
         }
-
-        return Path.Combine(this.RootDirectoryPath, path);
+        if (this.pleaseSilence && silenceEnabled)
+        {
+            return Path.Combine("D:\\OneDrive\\Pictures", "Please silence.png");
+        }
+        else
+        {
+            return Path.Combine(this.RootDirectoryPath, path);
+        }
     }
+
+    private bool pleaseSilence;
 
     protected override IEnumerable<string> GetOrderedPaths(IEnumerable<string> paths) => RandomizePaths(paths);
 

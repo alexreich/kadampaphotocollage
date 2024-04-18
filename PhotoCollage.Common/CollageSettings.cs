@@ -4,6 +4,7 @@ namespace PhotoCollage.Common
 {
     public class CollageSettings
     {
+        public bool SilenceEnabled { get; set; }
         public string Directory { get; set; } = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
         public bool IsGrayscale { get; set; } = false;
         public bool IsRandom { get; set; } = true;

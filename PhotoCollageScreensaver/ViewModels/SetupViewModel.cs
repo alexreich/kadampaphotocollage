@@ -23,7 +23,7 @@ public class SetupViewModel : INotifyPropertyChanged
         this.Config = config;
         this.controller = controllerToUse;
 
-        this.PreviewCommand = new RelayCommand((obj) => this.controller.StartScreensaver());
+        this.PreviewCommand = new RelayCommand((obj) => this.controller.StartScreensaver(false));
         this.OkCommand = new RelayCommand(obj => {
             this.controller.SaveConfiguration();
             this.controller.Shutdown();

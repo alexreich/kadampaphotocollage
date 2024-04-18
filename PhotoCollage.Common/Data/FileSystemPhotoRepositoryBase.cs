@@ -16,7 +16,7 @@ internal abstract class FileSystemPhotoRepositoryBase : IPhotoRepository
 
     public bool HasPhotos => !this.PhotoFilePaths.IsEmpty;
 
-    public abstract string GetNextPhotoFilePath();
+    public abstract string GetNextPhotoFilePath(bool silenceEnabled);
 
     protected ConcurrentQueue<string> PhotoFilePaths
     {

@@ -24,13 +24,20 @@ public class ApplicationController
         this.configuration = this.configurationRepository.Load();
     }
 
-    public void StartScreensaver()
+    public void StartScreensaver(bool silenceEnabled)
     {
+        this.configuration.SilenceEnabled = silenceEnabled;
         var collagePresenter = this.collagePresenter ??= new CollagePresenter(this, this.configuration);
+        int count = 0;
+        var screens = Monitors.Monitor.GetScreens();
         foreach (var screen in Monitors.Monitor.GetScreens())
         {
-            var collageWindow = new CollageWindow(this);
-            collagePresenter.SetupWindow(collageWindow, screen);
+            //if (!screen.IsPrimary)
+            //{
+                var collageWindow = new CollageWindow(this);
+                collagePresenter.SetupWindow(collageWindow, screen);
+            //}
+            count++;
         }
 
         collagePresenter.StartAnimation();
