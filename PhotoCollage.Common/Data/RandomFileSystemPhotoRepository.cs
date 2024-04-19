@@ -25,9 +25,9 @@ internal sealed class RandomFileSystemPhotoRepository : FileSystemPhotoRepositor
         lock (this.threadLock)
         {
             this.displayedPhotos.Add(path);
-            this.pleaseSilence = !this.pleaseSilence;
+            this.photoCounter++;
         }
-        if (this.pleaseSilence && silenceEnabled)
+        if (this.photoCounter % 3 == 0 && silenceEnabled)
         {
             return Path.Combine("D:\\OneDrive\\Pictures", "Please silence.png");
         }
@@ -37,7 +37,7 @@ internal sealed class RandomFileSystemPhotoRepository : FileSystemPhotoRepositor
         }
     }
 
-    private bool pleaseSilence;
+    private int photoCounter = 0;
 
     protected override IEnumerable<string> GetOrderedPaths(IEnumerable<string> paths) => RandomizePaths(paths);
 
