@@ -3,6 +3,7 @@ using PhotoCollageScreensaver.Data;
 using PhotoCollageScreensaver.ViewModels;
 using PhotoCollageScreensaver.Views;
 using System.IO;
+using System.Linq;
 using PhotoCollage.Common;
 
 namespace PhotoCollageScreensaver;
@@ -16,11 +17,82 @@ public class ApplicationController
 
     public ApplicationController()
     {
-        var localDataDirectory = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-            @"DigitalLagniappe\Screensavers\PhotoCollage");
-        this.logger = new TextLogger(localDataDirectory);
-        this.configurationRepository = new FileSystemSettingsRepository(localDataDirectory);
+        // Default settings directory (uses user's Pictures folder)
+        var defaultDataDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), "");
+
+        // Allow overriding the configuration directory via environment variable or command-line
+        // Use either the PHOTO_COLLAGE_CONFIG_DIR env var or the --config-dir="path" argument
+        string configDir = Environment.GetEnvironmentVariable("PHOTO_COLLAGE_CONFIG_DIR");
+        if (string.IsNullOrEmpty(configDir))
+        {
+            var args = Environment.GetCommandLineArgs();
+            // look for --config-dir=...
+            var arg = args.Skip(1).FirstOrDefault(a => a.StartsWith("--config-dir="));
+            if (arg != null)
+            {
+                configDir = arg.Substring("--config-dir=".Length).Trim('"');
+            }
+            else
+            {
+                // look for --config-dir <path>
+                for (int i = 1; i < args.Length - 1; i++)
+                {
+                    if (args[i] == "--config-dir")
+                    {
+                        configDir = args[i + 1].Trim('"');
+                        break;
+                    }
+                }
+            }
+        }
+
+        var localDataDirectory = !string.IsNullOrEmpty(configDir) && Directory.Exists(configDir)
+            ? configDir
+            : defaultDataDirectory;
+
+        // Allow specifying an alternate configuration filename in the same folder
+        // Use either the PHOTO_COLLAGE_CONFIG_FILE env var or the --config-file="name" argument
+        string configFile = Environment.GetEnvironmentVariable("PHOTO_COLLAGE_CONFIG_FILE");
+        if (string.IsNullOrEmpty(configFile))
+        {
+            var args2 = Environment.GetCommandLineArgs();
+            var argFile = args2.Skip(1).FirstOrDefault(a => a.StartsWith("--config-file="));
+            if (argFile != null)
+            {
+                configFile = argFile.Substring("--config-file=".Length).Trim('"');
+            }
+            else
+            {
+                for (int i = 1; i < args2.Length - 1; i++)
+                {
+                    if (args2[i] == "--config-file")
+                    {
+                        configFile = args2[i + 1].Trim('"');
+                        break;
+                    }
+                }
+            }
+        }
+
+        string configFileName = "photo-collage.config";
+        string configFolderToUse = localDataDirectory;
+        if (!string.IsNullOrEmpty(configFile))
+        {
+            if (Path.IsPathRooted(configFile))
+            {
+                // full path provided
+                configFolderToUse = Path.GetDirectoryName(configFile);
+                configFileName = Path.GetFileName(configFile);
+            }
+            else
+            {
+                // filename only - keep the previously determined folder
+                configFileName = configFile;
+            }
+        }
+
+        this.logger = new TextLogger(configFolderToUse);
+        this.configurationRepository = new FileSystemSettingsRepository(configFolderToUse, configFileName);
         this.configuration = this.configurationRepository.Load();
     }
 

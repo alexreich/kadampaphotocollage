@@ -7,11 +7,13 @@ internal sealed class RandomFileSystemPhotoRepository : FileSystemPhotoRepositor
 {
     private readonly List<string> displayedPhotos;
     private readonly object threadLock = new object();
+    private readonly string silenceFilename;
 
-    public RandomFileSystemPhotoRepository(string path)
+    public RandomFileSystemPhotoRepository(string path, string silenceFilename = null)
         : base(path)
     {
         this.displayedPhotos = new List<string>();
+        this.silenceFilename = silenceFilename ?? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), "Please silence.png");
     }
 
     public override string GetNextPhotoFilePath(bool silenceEnabled)
@@ -29,7 +31,7 @@ internal sealed class RandomFileSystemPhotoRepository : FileSystemPhotoRepositor
         }
         if (this.photoCounter % 3 == 0 && silenceEnabled)
         {
-            return Path.Combine("D:\\OneDrive\\Pictures", "Please silence.png");
+            return this.silenceFilename;
         }
         else
         {

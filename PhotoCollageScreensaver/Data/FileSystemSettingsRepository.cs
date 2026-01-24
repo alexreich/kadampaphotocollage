@@ -9,10 +9,10 @@ internal class FileSystemSettingsRepository : ISettingsRepository
     private readonly string directoryPath;
     private readonly string filePath;
 
-    public FileSystemSettingsRepository(string configurationFolderPath)
+    public FileSystemSettingsRepository(string configurationFolderPath, string configurationFileName = "photo-collage.config")
     {
         this.directoryPath = configurationFolderPath;
-        this.filePath = Path.Combine(this.directoryPath, @"photo-collage.config");
+        this.filePath = Path.Combine(this.directoryPath, configurationFileName);
         this.EnsureDirectoryExists();
         this.EnsureFileExists();
     }

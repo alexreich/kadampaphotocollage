@@ -1,10 +1,12 @@
-﻿using PhotoCollage.Common.Enums;
+﻿using System.IO;
+using PhotoCollage.Common.Enums;
 
 namespace PhotoCollage.Common
 {
     public class CollageSettings
     {
         public bool SilenceEnabled { get; set; }
+        public string SilenceFilename { get; set; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), "Please silence.png");
         public string Directory { get; set; } = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
         public bool IsGrayscale { get; set; } = false;
         public bool IsRandom { get; set; } = true;

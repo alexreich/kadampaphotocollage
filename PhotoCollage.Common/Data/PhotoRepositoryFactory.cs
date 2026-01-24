@@ -10,6 +10,6 @@ public sealed class PhotoRepositoryFactory
     }
 
     public IPhotoRepository Make() => this.configuration.IsRandom
-            ? new RandomFileSystemPhotoRepository(this.configuration.Directory)
+            ? new RandomFileSystemPhotoRepository(this.configuration.Directory, this.configuration.SilenceFilename)
             : new OrderedFileSystemPhotoRepository(this.configuration.Directory);
 }
