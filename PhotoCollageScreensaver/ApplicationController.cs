@@ -94,6 +94,13 @@ public class ApplicationController
         this.logger = new TextLogger(configFolderToUse);
         this.configurationRepository = new FileSystemSettingsRepository(configFolderToUse, configFileName);
         this.configuration = this.configurationRepository.Load();
+        
+        // Check for --ignore-mouse-movements argument
+        var cmdLineArgs = Environment.GetCommandLineArgs();
+        if (cmdLineArgs.Skip(1).Any(a => a.Equals("--ignore-mouse-movements", StringComparison.OrdinalIgnoreCase)))
+        {
+            this.configuration.IgnoreMouseMovements = true;
+        }
     }
 
     public void StartScreensaver(bool silenceEnabled)
@@ -106,7 +113,7 @@ public class ApplicationController
         {
             //if (!screen.IsPrimary)
             //{
-                var collageWindow = new CollageWindow(this);
+                var collageWindow = new CollageWindow(this, this.configuration.IgnoreMouseMovements);
                 collagePresenter.SetupWindow(collageWindow, screen);
             //}
             count++;

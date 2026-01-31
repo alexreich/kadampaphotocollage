@@ -17,5 +17,6 @@ namespace PhotoCollage.Common
         public BorderType PhotoBorderType { get; set; } = BorderType.Border;
         public ScreensaverSpeed Speed { get; set; } = ScreensaverSpeed.Medium;
         public bool UseVerboseLogging { get; set; } = false;
+        public bool IgnoreMouseMovements { get; set; } = false;
     }
 }

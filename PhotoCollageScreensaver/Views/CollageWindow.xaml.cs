@@ -6,12 +6,14 @@ namespace PhotoCollageScreensaver.Views;
 public partial class CollageWindow : Window, ICollageView
 {
     private readonly ApplicationController controller;
+    private readonly bool ignoreMouseMovements;
 
     private Point? initialMousePosition;
 
-    public CollageWindow(ApplicationController controllerToUse)
+    public CollageWindow(ApplicationController controllerToUse, bool ignoreMouseMovements = false)
     {
         this.controller = controllerToUse;
+        this.ignoreMouseMovements = ignoreMouseMovements;
         this.InitializeComponent();
     }
 
@@ -24,6 +26,11 @@ public partial class CollageWindow : Window, ICollageView
 
     private void Window_MouseMove(object sender, MouseEventArgs e)
     {
+        if (this.ignoreMouseMovements)
+        {
+            return;
+        }
+
         // Shut down application when mouse has moved significantly
         var position = e.GetPosition(this);
 

@@ -9,16 +9,19 @@ public class TextLogger : ILogger
     public TextLogger(string directoryPath)
     {
         this.directory = Path.Combine(directoryPath, @"logs");
+        EnsureDirectoryExists();
     }
 
     public void Log(string message)
     {
+        EnsureDirectoryExists();
         var fullPath = this.FullFilePath;
         File.AppendAllText(fullPath, this.GetLogEntry(message));
     }
 
     public void Log(string message, string stackTrace)
     {
+        EnsureDirectoryExists();
         var fullPath = this.FullFilePath;
         var lines = new List<string>()
             {
@@ -27,6 +30,14 @@ public class TextLogger : ILogger
                 stackTrace
             };
         File.AppendAllLines(fullPath, lines);
+    }
+
+    private void EnsureDirectoryExists()
+    {
+        if (!Directory.Exists(this.directory))
+        {
+            Directory.CreateDirectory(this.directory);
+        }
     }
 
     private string GetLogEntry(string message)
